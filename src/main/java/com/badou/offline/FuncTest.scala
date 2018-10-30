@@ -2,7 +2,7 @@ package com.badou.offline
 
 import org.apache.hadoop.hive.ql.optimizer.spark.SparkSkewJoinProcFactory.SparkSkewJoinJoinProcessor
 import org.apache.spark.sql.SparkSession
-
+import org.apache.spark.sql.functions._
 object FuncTest {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
@@ -22,7 +22,6 @@ object FuncTest {
     import org.apache.spark.sql.functions._
     val plusUDF = udf((col1:String,col2:String)=>col1.toInt+col2.toInt)
     df.withColumn("plus_udf",plusUDF(col("order_number"),col("order_dow"))).show()
-
 
 
 

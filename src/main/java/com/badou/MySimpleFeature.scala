@@ -64,19 +64,16 @@ object MySimpleFeature {
       .join(orders, "order_id").groupBy("user_id", "product_id").count()
     //2. 特定product具体在购物车中的出现位置的平均位置
     val p_position = priors.groupBy("product_id").agg(avg("add_to_cart_order").as("p_position"))
-    val am = Map(1,(1,2))
-    val a = List((1,(1,2)),(2,(1,2)))
-    a.groupBykey()
     //
     //4. 用户对应product在所有这个用户购买产品量中的占比rate
     //4.1,各用户,各产品的数量
-    val u_p_rate = op.select("user_id","product_id").groupBy("user_id","product_id").count()
-      .rdd.map(x=>(x(0).toString,(x(1).toString,x(2)))).groupByKey().mapValues(x=>{
+    val u_p_rate = op.select("user_id", "product_id").groupBy("user_id", "product_id").count()
+      .rdd.map(x => (x(0).toString, (x(1).toString, x(2).asInstanceOf[Int]))).groupByKey().mapValues(x => {
       //统计总数
-      var sum = x.toList.sum();
+      var sum = x.toList.reduce(_._2+_._2);
       //返回的数据
-      x.map()
-    })
+      x.map(x=>(x._1,x._2/sum))
+    }).toDF("user_id","tem").selectExpr("user_id","tem._1 as product_id","tem._2 as u_p_rate")
   }
 
 }
