@@ -58,7 +58,25 @@ object MySimpleFeature {
       * 4. 用户对应product在所有这个用户购买产品量中的占比rate
       **/
     //1. 统计user和对应product在多少个订单中出现（distinct order_id）
-    val u_p_record = priors.selectExpr("product_id","count(product_id) as prod_ord")
+    //1.1先对"order_id","product_id"进行去重
+    val u_p_record = priors.select("order_id", "product_id").distinct()
+      //1.1再对user和对应product在多少个订单中出现进行统计
+      .join(orders, "order_id").groupBy("user_id", "product_id").count()
+    //2. 特定product具体在购物车中的出现位置的平均位置
+    val p_position = priors.groupBy("product_id").agg(avg("add_to_cart_order").as("p_position"))
+    val am = Map(1,(1,2))
+    val a = List((1,(1,2)),(2,(1,2)))
+    a.groupBykey()
+    //
+    //4. 用户对应product在所有这个用户购买产品量中的占比rate
+    //4.1,各用户,各产品的数量
+    val u_p_rate = op.select("user_id","product_id").groupBy("user_id","product_id").count()
+      .rdd.map(x=>(x(0).toString,(x(1).toString,x(2)))).groupByKey().mapValues(x=>{
+      //统计总数
+      var sum = x.toList.sum();
+      //返回的数据
+      x.map()
+    })
   }
 
 }
