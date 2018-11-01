@@ -67,7 +67,7 @@ object MySimpleFeature {
     //3,最后一个订单id
     //3.1,关联两表;在对用户的order_id倒排,得到product_id的集合
     val u_last_p = orders.selectExpr("user_id", "cast(order_id as int)").groupBy("user_id")
-      .agg(max("order_id").as("order_id")).join(orders, "order_id").rdd
+      .agg(max("order_id").as("order_id")).join(priors, "order_id").select("user_id","product_id").rdd
       .map(x => (x(0).toString, x(1).toString))
       .groupByKey().mapValues(_.toList.mkString(","))
       .toDF("user_id","u_last_p")
