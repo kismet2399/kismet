@@ -64,20 +64,23 @@ object MySimpleFeature {
       .join(orders, "order_id").groupBy("user_id", "product_id").count()
     //2. 特定product具体在购物车中的出现位置的平均位置
     val p_position = priors.groupBy("product_id").agg(avg("add_to_cart_order").as("p_position"))
-    val b = List(1,2,3)
-    val a = List((1,2),(1,2))
-
-    1.asInstanceOf[Double]/ 2.asInstanceOf[Double]
+    //3,最后一个订单id
+    //3.1,关联两表;在对用户的order_id倒排,得到product_id的集合
+    val u_last_p = orders.selectExpr("user_id", "cast(order_id as int)").groupBy("user_id")
+      .agg(max("order_id").as("order_id")).join(orders, "order_id").rdd
+      .map(x => (x(0).toString, x(1).toString))
+      .groupByKey().mapValues(_.toList.mkString(","))
+      .toDF("user_id","u_last_p")
     //4. 用户对应product在所有这个用户购买产品量中的占比rate
-    val u_p_rate = op.groupBy("user_id", "product_id").count().selectExpr("user_id", "product_id","cast(count as int)")
-      .rdd.map(x => (x(0).toString, (x(1).toString, Integer.parseInt(x(2).toString)))).groupByKey().flatMap(x=>{
+    val u_p_rate = op.groupBy("user_id", "product_id").count().selectExpr("user_id", "product_id", "cast(count as int)")
+      .rdd.map(x => (x(0).toString, (x(1).toString, Integer.parseInt(x(2).toString)))).groupByKey().flatMap(x => {
       //4.1,各用户,各产品的数量
       var user = x._1;
       var total = 0;
       //4.2计算总数
-      x._2.foreach(x=>(total += x._2));
-      x._2.map(x=>(user,x._1,x._2.asInstanceOf[Double]/total.asInstanceOf[Double],x._2,total))
-    }).toDF("user_id","product_id","u_p_rate","num","total");
+      x._2.foreach(x => (total += x._2));
+      x._2.map(x => (user, x._1, x._2.asInstanceOf[Double] / total.asInstanceOf[Double], x._2, total))
+    }).toDF("user_id", "product_id", "u_p_rate", "num", "total");
   }
 
 }
