@@ -51,7 +51,7 @@ object SimpleFeature {
 //    4. 用户总商品数量以及去重后的商品数量
     val userProRcdSize = op.rdd.map(x=>(x(0).toString,x(1).toString))
       .groupByKey().mapValues{record=>
-      val rs = record.toSet
+      val rs = record.toSet;
       (rs.size,rs.mkString(","))
     }.toDF("user_id","tuple")
       .selectExpr("user_id","tuple._1 as prod_dist_cnt","tuple._2 as prod_records")
