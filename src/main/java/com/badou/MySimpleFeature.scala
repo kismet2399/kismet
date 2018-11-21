@@ -81,6 +81,7 @@ object MySimpleFeature {
       x._2.foreach(x => (total += x._2));
       x._2.map(x => (user, x._1, x._2.asInstanceOf[Double] / total.asInstanceOf[Double], x._2, total))
     }).toDF("user_id", "product_id", "u_p_rate", "num", "total");
+    u_p_rate
   }
 
 }
