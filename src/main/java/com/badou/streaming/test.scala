@@ -6,9 +6,10 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object test {
   def main(args: Array[String]): Unit = {
+    System.setProperty("hadoop.home.dir", "C:\\bigData\\hadoop-2.6.1")
     val conf = new SparkConf().setAppName("WC").setMaster("local[2]")
     val ssc = new StreamingContext(conf, Seconds(2))
-    ssc.checkpoint("E:/streamData/checkpoint")
+    ssc.checkpoint("C:/streamData/checkpoint")
 
     Logger.getLogger("org.apache.spark").setLevel(Level.ERROR)
 
