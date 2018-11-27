@@ -9,14 +9,14 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.sql.functions._
 
 object ReceiverFromKafka {
-
+  case class Order(order_id:String,user_id:String)
   def main(args: Array[String]): Unit = {
     if (args.length < 4) {
       System.err.println("Usage: ReceiverFromKafka<directory>")
       System.exit(1)
     }
     val Array(group_id, topic, exectime, dt) = args;
-    val zkHostIp = Array("10", "11", "12").map("192.168.181" + _)
+    val zkHostIp = Array("10", "11", "12").map("192.168.181." + _)
     val ZK_QUQRUM = zkHostIp.map(_ + ":2181").mkString(",")
     val numThreads = 1
 
@@ -40,7 +40,7 @@ object ReceiverFromKafka {
       import spark.implicits._
       rdd.map{x=>
         val mess = JSON.parseObject(x,classOf[Orders])
-        (mess.getOrder_id,mess.getUser_id)
+        Order(mess.getOrder_id,mess.getUser_id)
       }.toDF()
     }
     val log = mesR.foreachRDD{rdd=>

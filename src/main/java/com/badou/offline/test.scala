@@ -8,7 +8,7 @@ object test {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("WC").setMaster("local[2]")
     val ssc = new StreamingContext(conf,Seconds(2))
-    ssc.checkpoint("E:/streamData/checkpoint")
+    ssc.checkpoint("C:/streamData/checkpoint")
 
     Logger.getLogger("org.apache.spark").setLevel(Level.ERROR)
 
