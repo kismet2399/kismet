@@ -10,7 +10,7 @@ object DirectOffsetDem {
   def main(args: Array[String]): Unit = {
     Logger.getLogger("org.apache.spark").setLevel(Level.ERROR)
 
-    val Array(brokers, topics,consumer) = Array("192.168.174.134:9092","badou","group_bd")
+    val Array(brokers, topics,consumer) = Array("192.168.181.10:9092","test","group_bd")
 
     // Create context with 2 second batch interval
     val sparkConf = new SparkConf().setAppName("DirectOffsetDem")

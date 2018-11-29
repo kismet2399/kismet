@@ -23,10 +23,15 @@ class KafkaManager(val kafkaParams: Map[String, String],
   @transient private val kc = new KafkaCluster(kafkaParams)
   @transient private val groupId = kafkaParams.get("group.id")
 
-  def createDirectStream[K: ClassTag, V: ClassTag, KD <: Decoder[K]: ClassTag, VD <: Decoder[V]: ClassTag, R: ClassTag](ssc: StreamingContext,
-                                                                                                                        kafkaParams: Map[String, String],
-                                                                                                                        topics: Set[String],
-                                                                                                                        messageHandler: MessageAndMetadata[K, V] => R): InputDStream[R] = {
+  def createDirectStream[
+  K: ClassTag,
+  V: ClassTag,
+  KD <: Decoder[K] : ClassTag,
+  VD <: Decoder[V] : ClassTag,
+  R: ClassTag](ssc: StreamingContext,
+               kafkaParams: Map[String, String],
+               topics: Set[String],
+               messageHandler: MessageAndMetadata[K, V] => R): InputDStream[R] = {
     val cleanedHandler = ssc.sc.clean(messageHandler)
     val fromOffsets = getStartOffsets(kc, kafkaParams, topics)
     fromOffsets.foreach {
@@ -37,20 +42,31 @@ class KafkaManager(val kafkaParams: Map[String, String],
       ssc, kafkaParams, fromOffsets, cleanedHandler)
   }
 
-  def createDirectStream[K: ClassTag, V: ClassTag, KD <: Decoder[K]: ClassTag, VD <: Decoder[V]: ClassTag, R: ClassTag](
-                                                                                                                         ssc: StreamingContext,
-                                                                                                                         kafkaParams: Map[String, String],
-                                                                                                                         fromOffsets: Map[TopicAndPartition, Long],
-                                                                                                                         messageHandler: MessageAndMetadata[K, V] => R): InputDStream[R] = {
+  def createDirectStream[
+  K: ClassTag,
+  V: ClassTag,
+  KD <: Decoder[K] : ClassTag,
+  VD <: Decoder[V] : ClassTag,
+  R: ClassTag](
+                ssc: StreamingContext,
+                kafkaParams: Map[String, String],
+                fromOffsets: Map[TopicAndPartition, Long],
+                messageHandler: MessageAndMetadata[K, V] => R): InputDStream[R] = {
     val cleanedHandler = ssc.sc.clean(messageHandler)
     new DirectKafkaInputDStream[K, V, KD, VD, R](
       ssc, kafkaParams, fromOffsets, cleanedHandler)
   }
 
-  def createDirectStream[K: ClassTag, V: ClassTag, KD <: Decoder[K]: ClassTag, VD <: Decoder[V]: ClassTag](
-                                                                                                            ssc: StreamingContext,
-                                                                                                            kafkaParams: Map[String, String],
-                                                                                                            topics: Set[String]): InputDStream[(K, V)] = {
+  def createDirectStream[
+  K: ClassTag,
+  V: ClassTag,
+  KD <: Decoder[K] : ClassTag,
+  VD <: Decoder[V] : ClassTag]
+  (
+    ssc: StreamingContext,
+    kafkaParams: Map[String, String],
+    topics: Set[String]
+  ): InputDStream[(K, V)] = {
     val messageHandler = (mmd: MessageAndMetadata[K, V]) => (mmd.key, mmd.message)
     val fromOffsets = getStartOffsets(kc, kafkaParams, topics)
     fromOffsets.foreach {
@@ -61,16 +77,18 @@ class KafkaManager(val kafkaParams: Map[String, String],
       ssc, kafkaParams, fromOffsets, messageHandler)
   }
 
-  def createJavaDirectStream[K, V, KD <: Decoder[K], VD <: Decoder[V], R](
-                                                                           jssc: JavaStreamingContext,
-                                                                           keyClass: Class[K],
-                                                                           valueClass: Class[V],
-                                                                           keyDecoderClass: Class[KD],
-                                                                           valueDecoderClass: Class[VD],
-                                                                           recordClass: Class[R],
-                                                                           kafkaParams: JMap[String, String],
-                                                                           fromOffsets: JMap[TopicAndPartition, JLong],
-                                                                           messageHandler: JFunction[MessageAndMetadata[K, V], R]): JavaInputDStream[R] = {
+  def createJavaDirectStream[K, V, KD <: Decoder[K], VD <: Decoder[V], R]
+  (
+    jssc: JavaStreamingContext,
+    keyClass: Class[K],
+    valueClass: Class[V],
+    keyDecoderClass: Class[KD],
+    valueDecoderClass: Class[VD],
+    recordClass: Class[R],
+    kafkaParams: JMap[String, String],
+    fromOffsets: JMap[TopicAndPartition, JLong],
+    messageHandler: JFunction[MessageAndMetadata[K, V], R]
+  ): JavaInputDStream[R] = {
     implicit val keyCmt: ClassTag[K] = ClassTag(keyClass)
     implicit val valueCmt: ClassTag[V] = ClassTag(valueClass)
     implicit val keyDecoderCmt: ClassTag[KD] = ClassTag(keyDecoderClass)
@@ -84,14 +102,16 @@ class KafkaManager(val kafkaParams: Map[String, String],
       cleanedHandler)
   }
 
-  def createJavaDirectStream[K, V, KD <: Decoder[K], VD <: Decoder[V]](
-                                                                        jssc: JavaStreamingContext,
-                                                                        keyClass: Class[K],
-                                                                        valueClass: Class[V],
-                                                                        keyDecoderClass: Class[KD],
-                                                                        valueDecoderClass: Class[VD],
-                                                                        kafkaParams: JMap[String, String],
-                                                                        topics: JSet[String]): JavaPairInputDStream[K, V] = {
+  def createJavaDirectStream[K, V, KD <: Decoder[K], VD <: Decoder[V]]
+  (
+    jssc: JavaStreamingContext,
+    keyClass: Class[K],
+    valueClass: Class[V],
+    keyDecoderClass: Class[KD],
+    valueDecoderClass: Class[VD],
+    kafkaParams: JMap[String, String],
+    topics: JSet[String]
+  ): JavaPairInputDStream[K, V] = {
     implicit val keyCmt: ClassTag[K] = ClassTag(keyClass)
     implicit val valueCmt: ClassTag[V] = ClassTag(valueClass)
     implicit val keyDecoderCmt: ClassTag[KD] = ClassTag(keyDecoderClass)
@@ -102,9 +122,10 @@ class KafkaManager(val kafkaParams: Map[String, String],
       Set(topics.asScala.toSeq: _*))
   }
 
-  private def getStartOffsets(kc: KafkaCluster,
-                              kafkaParams: Map[String, String],
-                              topics: Set[String]): Map[TopicAndPartition, Long] = {
+  private def getStartOffsets(
+                               kc: KafkaCluster,
+                               kafkaParams: Map[String, String],
+                               topics: Set[String]): Map[TopicAndPartition, Long] = {
     topics.flatMap { topic =>
       if (groupId.isEmpty || ignoreZKOffsets)
         KafkaUtils.getFromOffsets(kc, kafkaParams, Set(topic))
