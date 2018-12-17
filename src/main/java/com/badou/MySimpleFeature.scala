@@ -5,6 +5,10 @@ import org.apache.spark.sql.functions._
 
 object MySimpleFeature {
   def Feat(priors: DataFrame, orders: DataFrame): DataFrame = {
+    val list = List((1->2),(1->3),(2->2),(2->3))
+    list.groupBy(_._1).mapValues(_.map(_._2).sum)
+    (1->List((1->2),(1->3)))
+    (2->List((2->2),(2->3)))
     /** product feature
       * 1.销售量 prod_cnt
       * 2.商品被再次购买（reordered）量prod_sum_rod
@@ -14,6 +18,9 @@ object MySimpleFeature {
     import priors.sparkSession.implicits._
     priors.select("product_id").groupBy("product_id").count()
     priors.groupBy("product_id")
+
+
+      
       .agg(sum("reordered").as("prod_sum_rod"),
         avg("reordered").as("prod_rod_rate"),
         count("product_id").as("prod_sum_rod"))

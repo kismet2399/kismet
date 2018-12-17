@@ -37,6 +37,7 @@ object ReceiverFromKafka {
 //    topic 对应线程Map{topic：numThreads}
     val topicSet = topic.split(",").toSet
     val topicMap = topicSet.map((_,numThreads.toInt)).toMap
+//    val topicMap = topic.split(",").toSet.map((_,numThreads.toInt)).toMap
 
 //    3、通过Receiver接受kafka数据
 // 为什么是map（_._2）: @return DStream of (Kafka message key, Kafka message value)
