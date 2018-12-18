@@ -6,6 +6,7 @@ import org.apache.hadoop.hbase.mapred.TableOutputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.mapred.JobConf
 import org.apache.spark.sql.SparkSession
+import org.apache.log4j.{Level, Logger}
 
 object SparkHBase {
   //从hive取数据(Dataframe->RDD)写入HBase,
@@ -17,7 +18,7 @@ object SparkHBase {
       .enableHiveSupport().getOrCreate()
 
     val rdd = spark.sql("select order_id,user_id,order_dow from orders limit 300").rdd
-
+    Logger.getLogger("org.apache.spark").error(rdd)
     /**
       * 一个put对象就是一行记录,在构造方法中指定主键user_id
       * 所有插入的数据必须用org.apache.hadoop.hbase.util.Bytes.toBytes方法转换
