@@ -18,7 +18,18 @@ object SparkHBase {
       .enableHiveSupport().getOrCreate()
 
     val rdd = spark.sql("select order_id,user_id,order_dow from orders limit 300").rdd
-    Logger.getLogger("org.apache.spark").error(rdd)
+
+    val logger = Logger.getLogger("org.apache.spark")
+    logger.error("Logger=========================================================================")
+    logger.error(rdd.count())
+    var list: List[String] = List()
+    val result = rdd.map(row =>row(0).asInstanceOf[String] + "=========" + row(1).asInstanceOf[String] + "=========" + row(2).asInstanceOf[String] + "=========").collect().toList
+    logger.error(result)
+    logger.error("Logger=========================================================================")
+    System.out.println("print===================================================================")
+    System.out.println(rdd.count())
+    System.out.println(result)
+
     /**
       * 一个put对象就是一行记录,在构造方法中指定主键user_id
       * 所有插入的数据必须用org.apache.hadoop.hbase.util.Bytes.toBytes方法转换

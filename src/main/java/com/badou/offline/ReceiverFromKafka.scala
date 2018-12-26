@@ -25,14 +25,14 @@ object ReceiverFromKafka {
 
 //    1、获取参数/指定6个参数group_id,topic,exectime,dt，ZK_QUORUM，numThreads
 //    val Array(group_id,topic,exectime,dt) = args
-    val Array(group_id,topic,exectime,dt) = Array("group_test","test","30","20181125")
+    val Array(group_id,topic,exectime,dt) = Array("group_test","test","6","20181125")
     val zkHostIP = Array("10","11","12").map("192.168.181."+_)
     val ZK_QUORUM = zkHostIP.map(_+":2181").mkString(",")
 //192.168.174.134:2181,192.168.174.125:2181,192.168.174.129:2181
     val numThreads = 1
 
 //    2、创建streamContext
-    val conf = new SparkConf()//.setAppName("TEST").setMaster("local[2]")
+    val conf = new SparkConf().setAppName("TEST").setMaster("local[2]")
     val ssc = new StreamingContext(conf,Seconds(exectime.toInt))
 //    topic 对应线程Map{topic：numThreads}
     val topicSet = topic.split(",").toSet
@@ -42,7 +42,7 @@ object ReceiverFromKafka {
 //    3、通过Receiver接受kafka数据
 // 为什么是map（_._2）: @return DStream of (Kafka message key, Kafka message value)
     val mesR = KafkaUtils.createStream(ssc,ZK_QUORUM,group_id,topicMap).map(_._2)
-
+    mesR.print()
 //    mesR.map((_,1L)).reduceByKey(_+_).print
 
 //    4、生成一个rdd转DF的方法，供后面使用
