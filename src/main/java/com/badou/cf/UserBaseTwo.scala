@@ -45,7 +45,7 @@ object UserBaseTwo {
 
     val u_u_itemList = sim.join(userItemList, "user_id").join(userItemList_v, "user_v")
     //过滤udf
-    val filter_udf = udf((items: Seq[String], items_v: Seq[String], cosine_sim: Double) => {
+    val filter_udf = udf { (items: Seq[String], items_v: Seq[String], cosine_sim: Double) =>
       //获取已评论的集合
       val itemList = items.map { x =>
         val l = x.split("-")
@@ -59,7 +59,7 @@ object UserBaseTwo {
         val l = x.split("-")
         (l(0), l(1).toDouble * cosine_sim)
       }
-    })
+    }
 
     val itemsimRating = u_u_itemList.withColumn("itemsimRating",
       filter_udf(col("item_rate_list"), col("item_rate_list_v"), col("cosine_sim")))
@@ -68,7 +68,7 @@ object UserBaseTwo {
     val userItemScore = itemsimRating.select(itemsimRating("user_id"), explode(itemsimRating("itemsimRating")))
       .toDF("user_id", "itemsimRating")
       .selectExpr("user_id", "itemsimRating._1 as item_id", "itemsimRating._2 as score")
-      .groupBy("user_id","item_id")
+      .groupBy("user_id", "item_id")
       .agg(sum("score").as("sum_score"))
       .orderBy(col("sum_score").desc)
   }
