@@ -21,7 +21,7 @@ object UserBase {
     // 1.1 item->user倒排表
     val df = udata.selectExpr("user_id as user_v", "item_id", "rating as rating_v")
     val df_decare = udata.join(df, "item_id")
-      .filter("user_id < user_v")
+      .filter("user_id <> user_v")
     // 对item聚合在对user聚合计算出相识度
     // 计算统一item时的评分乘积
     import org.apache.spark.sql.functions._
