@@ -13,7 +13,6 @@ object kismet {
 
     import spark.implicits._
     val orders = spark.sql("select * from orders");
-    orders.rdd.count()
     val priors = spark.sql("select * from order_products_prior");
     val op = orders.join(priors,"order_id").select("user_id","product_id")
 
