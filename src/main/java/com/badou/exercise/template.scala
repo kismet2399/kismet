@@ -23,6 +23,7 @@ object template {
     //7 倒排使用
     userItemScore.orderBy(col("sum_score").desc)
     //8 map(x=(x(0),x(1))可以直接toMap
-    //9 lit给统一的值要引入
+    //9 lit给统一的值要引入(增加一行lable值为1
+    userItemScore.withColumn("label",lit(1))
   }
 }

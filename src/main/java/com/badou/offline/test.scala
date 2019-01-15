@@ -18,7 +18,7 @@ object test {
       Some(curCount+preCount)
     }
 
-    val lines = ssc.socketTextStream("192.168.181.10",9999)
+    val lines = ssc.socketTextStream("192.168.181.10",9998)
     val words = lines.flatMap(_.split(" "))
     val wordCounts = words.map((_,1L)).updateStateByKey[Long](addFunc)
 //      .reduceByKeyAndWindow((a:Int,b:Int)=>a+b,Seconds(20),Seconds(4))
