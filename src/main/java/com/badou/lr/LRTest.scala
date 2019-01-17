@@ -49,8 +49,16 @@ object LRTest {
     val train = trainData.join(userFeat,"user_id").join(prodFeat,"product_id")
 
 //  模型
-
-// 具体特征：Array(product_id, user_id, label, u_avg_day_gap, user_ord_cnt, u_prod_dist_cnt,
+    /**
+      * 每个用户平均购买订单的间隔周期:u_avg_day_gap
+      * 每个用户的总订单数:user_ord_cnt
+      * 用户购买商品种类:u_prod_dist_cnt
+      * 用户订单中商品个数的平均值:u_avg_ord_prods
+      * 商品被再次购买的数量:prod_sum_rod
+      * 商品被再次购买率:prod_rod_rate
+      * 商品销售量:prod_cnt
+      */
+    // 具体特征：Array(product_id, user_id, label, u_avg_day_gap, user_ord_cnt, u_prod_dist_cnt,
 // u_prod_records, u_avg_ord_prods, prod_sum_rod, prod_rod_rate, prod_cnt)
 //    特征处理通过rformula:离散化特征one-hot，连续特征不处理，
 //    最后将分别处理的特征向量拼成最后的特征
@@ -65,11 +73,11 @@ object LRTest {
 //      .cache()
 //  算法为收敛，迭代停止是因为达到了做大迭代次数
 // LogisticRegression training finished but the result is not converged because: max iterations reached
-//    lr模型的定义
+//    lr模型的定义:setReg正则参数;setMaxIter迭代次数
     val lr = new LogisticRegression().setMaxIter(10).setRegParam(0)
 
 //    划分训练集和测试集
-    val Array(trainingData,testData)=df.randomSplit(Array(0.7,0.3))
+    val Array(trainingData,testData)=df.randomSplit(Array(0.1,0.9))
 //    模型训练
     val lrModel = lr.fit(trainingData)
     // 打印系数（weight：W）和截距b
