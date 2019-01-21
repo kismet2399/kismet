@@ -46,30 +46,30 @@ object ReceiverFromKafka {
 //    mesR.map((_,1L)).reduceByKey(_+_).print
 
 //    4、生成一个rdd转DF的方法，供后面使用
-//    def rdd2DF(rdd: RDD[String]): DataFrame ={
-//      val spark = SparkSession
-//        .builder()
-//        .appName("Streaming Frome Kafka")
-//        .config("hive.exec.dynamic.partition","true")
-//        .config("hive.exec.dynamic.partition.mode","nonstrict")
-//        .enableHiveSupport().getOrCreate()
-//      import spark.implicits._
-////      Json格式的数据{"order_id":"1","user_id":"2"}
-//
-//
-//      rdd.map{x=>
-//        val mess = JSON.parseObject(x,classOf[Orders])
-//        Order(mess.getOrder_id,mess.getUser_id)
-//      }.toDF()
-//    }
-////  5、Dstream核心处理逻辑 ，对Dstream中每个rdd做“rdd转DF”，
-////      然后通过DF结构将数据追加到分区表中
-//    val log = mesR.foreachRDD{rdd=>
-//      val df = rdd2DF(rdd)
-//      df.withColumn("dt",lit(dt.toString))
-//        .write.mode(SaveMode.Append)
-//        .insertInto("order_partition")
-//  }
+    def rdd2DF(rdd: RDD[String]): DataFrame ={
+      val spark = SparkSession
+        .builder()
+        .appName("Streaming Frome Kafka")
+        .config("hive.exec.dynamic.partition","true")
+        .config("hive.exec.dynamic.partition.mode","nonstrict")
+        .enableHiveSupport().getOrCreate()
+      import spark.implicits._
+//      Json格式的数据{"order_id":"1","user_id":"2"}
+
+
+      rdd.map{x=>
+        val mess = JSON.parseObject(x,classOf[Orders])
+        Order(mess.getOrder_id,mess.getUser_id)
+      }.toDF()
+    }
+//  5、Dstream核心处理逻辑 ，对Dstream中每个rdd做“rdd转DF”，
+//      然后通过DF结构将数据追加到分区表中
+    val log = mesR.foreachRDD{rdd=>
+      val df = rdd2DF(rdd)
+      df.withColumn("dt",lit(dt.toString))
+        .write.mode(SaveMode.Append)
+        .insertInto("order_partition")
+  }
 
     ssc.start()
     ssc.awaitTermination()

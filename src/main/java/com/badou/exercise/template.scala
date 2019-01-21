@@ -1,4 +1,5 @@
 package com.badou.exercise
+import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 object template {
   def kismet(): Unit = {
@@ -25,5 +26,7 @@ object template {
     //8 map(x=(x(0),x(1))可以直接toMap
     //9 lit给统一的值要引入(增加一行lable值为1
     userItemScore.withColumn("label",lit(1))
+    //10 启动线程数，至少是两个。一个线程用于监听数据源，其他线程用于消费或打印。至少是2个
+    val conf=new SparkConf().setMaster("local[5]").setAppName("kafkainput")
   }
 }

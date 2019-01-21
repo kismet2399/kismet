@@ -1,6 +1,5 @@
 package com.badou.lr
 
-import com.badou.lr.SimpleFeature
 import org.apache.spark.ml.classification.{BinaryLogisticRegressionSummary, LogisticRegression}
 import org.apache.spark.ml.feature.RFormula
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
