@@ -1,0 +1,18 @@
+{
+  "type": "ALIYUN",
+  "host": "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet",
+  "port": "",
+  "username": "LTAIaGdXj7DlAta1",
+  "password": "KFCiwYPgASfVuTWZAeShb4Axbswx1g",
+  "topicName": "JINGBO_TRANSACTION_TOPIC_DEV",
+  "producerId": "PID_JINGBO_TRANSACTION_DEV",
+  "virtualHost": "/",
+  "consumeThreadNums":5,
+  "consumerId": "CID_JINGBO_TRANSACTION_DEV",
+  "baseConsumerId": "CID_JINGBO_TRANSACTION_DEV_BASE",
+  "promotionConsumerId": "CID_JINGBO_TRANSACTION_DEV_PROMOTION",
+  "memberConsumerId": "CID_JINGBO_TRANSACTION_DEV_MEMBER",
+  "itemConsumerId": "CID_JINGBO_TRANSACTION_DEV_ITEM",
+  "tradeConsumerId": "CID_JINGBO_TRANSACTION_DEV_TRADE",
+  "inventoryConsumerId": "CID_JINGBO_TRANSACTION_DEV_INVENTORY"
+}
