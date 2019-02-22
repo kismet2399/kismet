@@ -14,7 +14,7 @@ object BayesTest {
 
     val ModelPath = "hdfs:////model/bayes/bayes_model"
     val conf = new SparkConf()
-      .registerKryoClasses(Array(classOf[JiebaSegmenter]))
+      .registerKryoClasses(Array(classOf[JiebaSegmenter]))//设置序列化类
       .set("spark.rpc.message.maxSize","800")
 //    建立spark session，传入conf
     val spark = SparkSession
@@ -105,6 +105,7 @@ object BayesTest {
     val eval = new MulticlassClassificationEvaluator()
       .setLabelCol("indexed")
       .setPredictionCol("pred_label")
+      //f1评估:2pr(p+r)
       .setMetricName("f1")
 
     val f1_score = eval.evaluate(pred)
