@@ -21,11 +21,6 @@ object HdfsFile2Hive {
       .master("local[2]")
       .getOrCreate()
 
-    val testRdd = spark.sparkContext.textFile("C:\\study\\projects\\python\\bayes\\raw_data")
-    testRdd.flatMap(_.split(" ").map((_, 1))).reduceByKey(_ + _)
-      .sortBy(_._2, ascending = false).take(20)
-      .foreach(println)
-
     val path = "hdfs://master:9000/data/raw_data"
 
     // 读取目录下所有的文件名存储在paths中
@@ -54,19 +49,20 @@ object HdfsFile2Hive {
       })
     }
 
+    listAllFiles(path)
     //将读取文件的标题改为lable
-    val matchLable = (filePath: String) => filePath match {
+    val matchLabel = (filePath: String) => filePath match {
       case filePath if filePath.contains("business") => "business"
       case filePath if filePath.contains("yule") => "yule"
       case filePath if filePath.contains("it") => "it"
       case filePath if filePath.contains("sports") => "sports"
       case filePath if filePath.contains("auto") => "auto"
     }
-    //    val tem = paths.map(path => (path, matchLable(path)))
-    //获取(context,lable,segs)形式的ListBuffer
+    //    val tem = paths.map(path => (path, matchLabel(path)))
+    //获取(context,label,segs)形式的ListBuffer
     val listData = paths.map(filePath => (sc.textFile(filePath).collect().mkString("").replace(" ", ""),
-      matchLable(filePath), sc.textFile(filePath).collect().mkString("")))
-    // 设置临时dataFream结构
+      matchLabel(filePath), sc.textFile(filePath).collect().mkString("")))
+    // 设置临时dataFrame结构
     val schemaString = "sentence label segs"
     val fields = schemaString.split(" ")
       .map(fieldName => StructField(fieldName, StringType, nullable = true))
@@ -79,7 +75,5 @@ object HdfsFile2Hive {
     result.createOrReplaceTempView("temBlock")
     //插入到数据库
     spark.sql("select * from temBlock").write.mode(SaveMode.Overwrite).saveAsTable("news_noseg")
-
   }
-
 }
