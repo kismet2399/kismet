@@ -80,7 +80,7 @@ object BayesSelf {
 
     val bayesModel = nb.fit(train)
     val pred = bayesModel.transform(test)
-    pred.select("probIndexs","rawPred").show(2,false)
+    pred.filter("indexs != preIndexs").select("probIndexs","rawPred").show(2,false)
     //  6,模型评估
     val evaluator = new MulticlassClassificationEvaluator()
       .setLabelCol("indexs")

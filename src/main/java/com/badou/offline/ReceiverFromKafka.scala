@@ -25,7 +25,7 @@ object ReceiverFromKafka {
 
 //    1、获取参数/指定6个参数group_id,topic,exectime,dt，ZK_QUORUM，numThreads
 //    val Array(group_id,topic,exectime,dt) = args
-    val Array(group_id,topic,exectime,dt) = Array("group-top333","top333","6","20181125")
+    val Array(group_id,topic,exectime,dt) = Array("group-top333","top333","6","20181212")
     val zkHostIP = Array("10","11","12").map("192.168.181."+_)
     val ZK_QUORUM = zkHostIP.map(_+":2181").mkString(",")
 //192.168.174.134:2181,192.168.174.125:2181,192.168.174.129:2181
