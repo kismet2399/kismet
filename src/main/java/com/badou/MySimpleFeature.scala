@@ -36,6 +36,8 @@ object MySimpleFeature {
 
     //1. 每个用户购买订单的平均间隔
     val op = priors.join(orders, "order_id")
+
+    op.orderBy(col("order_id").desc)
     val u_ds = orders.selectExpr("user_id", "if(days_since_prior_order=='',0,days_since_prior_order) as ds")
       .groupBy("user_id")
       .agg(avg("ds"))
@@ -80,7 +82,7 @@ object MySimpleFeature {
       .toDF("user_id","u_last_p")
     //4. 用户对应product在所有这个用户购买产品量中的占比rate
     val u_p_rate = op.groupBy("user_id", "product_id").count().selectExpr("user_id", "product_id", "cast(count as int)")
-      .rdd.map(x => (x(0).toString, (x(1).toString, Integer.parseInt(x(2).toString)))).groupByKey().flatMap(x => {
+      .rdd.map(x => (x(0).toString, (x(1).toString, x(2).toString.toInt))).groupByKey().flatMap(x => {
       //4.1,各用户,各产品的数量
       var user = x._1;
       var total = 0;

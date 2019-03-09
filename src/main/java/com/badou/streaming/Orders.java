@@ -1,6 +1,8 @@
 package com.badou.streaming;
 
-public class Orders {
+import java.io.Serializable;
+
+public class Orders implements Serializable {
     private String order_id;
     private String user_id;
 

@@ -1,7 +1,7 @@
 package com.badou.streaming
 
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.{Duration, Seconds, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
 object test {
@@ -26,7 +26,7 @@ object test {
       .updateStateByKey[Long](addFunc)
     //.reduceByKeyAndWindow((a:Int,b:Int)=>a+b,Seconds(20),Seconds(2))
     wordCount.print()
-
+    words.checkpoint(Duration(2))
     ssc.start()
     ssc.awaitTermination()
 //    val conf = new SparkConf().setMaster("local[2]").setAppName("weblog")

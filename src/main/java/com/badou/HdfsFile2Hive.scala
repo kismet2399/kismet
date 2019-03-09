@@ -52,11 +52,11 @@ object HdfsFile2Hive {
     listAllFiles(path)
     //将读取文件的标题改为lable
     val matchLabel = (filePath: String) => filePath match {
-      case filePath if filePath.contains("business") => "business"
-      case filePath if filePath.contains("yule") => "yule"
-      case filePath if filePath.contains("it") => "it"
-      case filePath if filePath.contains("sports") => "sports"
-      case filePath if filePath.contains("auto") => "auto"
+      case file if file.contains("business") => "business"
+      case file if file.contains("yule") => "yule"
+      case file if file.contains("it") => "it"
+      case file if file.contains("sports") => "sports"
+      case file if file.contains("auto") => "auto"
     }
     //    val tem = paths.map(path => (path, matchLabel(path)))
     //获取(context,label,segs)形式的ListBuffer

@@ -13,11 +13,11 @@ object FuncTest {
     import spark.implicits._
     val orderNumberSort = df.select("user_id","order_number","order_hour_of_day")
       .rdd.map(x=>(x(0).toString,(x(1).toString,x(2).toString)))
-      .groupByKey()
-      .mapValues{
-        _.toArray.sortWith(_._2<_._2)
-      }.toDF("user_id","ons")
-
+//      .groupByKey()
+//      .mapValues{
+//        _.toArray.sortWith(_._2<_._2)
+//      }.toDF("user_id","ons")
+    orderNumberSort.saveAsTextFile("hdfs://master:9000/tmp/tmp/");
     // udf
     import org.apache.spark.sql.functions._
     val plusUDF = udf((col1:String,col2:String)=>col1.toInt+col2.toInt)

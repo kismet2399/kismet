@@ -15,6 +15,7 @@ object ReceiverFromKafka {
       System.err.println("Usage: ReceiverFromKafka<directory>")
       System.exit(1)
     }
+    //"group-top333","top333","6","20181212"
     val Array(group_id, topic, exectime, dt) = args;
     val zkHostIp = Array("10", "11", "12").map("192.168.181." + _)
     val ZK_QUQRUM = zkHostIp.map(_ + ":2181").mkString(",")
@@ -28,7 +29,7 @@ object ReceiverFromKafka {
     val topicMap = set.map((_, numThreads.toInt)).toMap
     //通过receive的方式接受kafka消息
     val mesR = KafkaUtils.createStream(ssc,ZK_QUQRUM,group_id,topicMap).map(_._2)
-
+    val o = Order("kismet","2399")
     def rdd2Df(rdd: RDD[String]):DataFrame = {
       val spark = SparkSession
         .builder()
@@ -40,6 +41,7 @@ object ReceiverFromKafka {
       import spark.implicits._
       rdd.map{x=>
         val mess = JSON.parseObject(x,classOf[Orders])
+        print(mess)
         Order(mess.getOrder_id,mess.getUser_id)
       }.toDF()
     }
