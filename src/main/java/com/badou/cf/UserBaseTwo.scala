@@ -4,6 +4,12 @@ import breeze.numerics.{pow, sqrt}
 import org.apache.spark.sql.SparkSession
 
 object UserBaseTwo {
+  /**
+    * data-->user_id,item_id,score-->方法:a*b/(|a|*|b|)
+    * 1,基于user_id的groupBy统计用户的打分模-->(score^2).sum在开方
+    * 2,计算点乘-->user_id,score,item_id,user_v,score_v-->
+    * @param args
+    */
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
       .appName("just kismet")

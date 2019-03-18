@@ -1,7 +1,7 @@
 package com.badou.hbase
 
 import org.apache.hadoop.hbase.{HBaseConfiguration, TableName}
-import org.apache.hadoop.hbase.client.{HTable, Put}
+import org.apache.hadoop.hbase.client.{ConnectionFactory, HTable, Put}
 import org.apache.hadoop.hbase.mapred.TableOutputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.mapred.JobConf
@@ -42,15 +42,18 @@ object SparkHBase {
       p.add(Bytes.toBytes("id"), Bytes.toBytes("order"), Bytes.toBytes(order_id))
       p.add(Bytes.toBytes("num"), Bytes.toBytes("dow"), Bytes.toBytes(order_dow))
       p
+      p
     }.foreachPartition { partition =>
       //初始化jobConf,TableOutputFormat必须在org.apache.hadoop.hbase.mapred包下
       val jobConf = new JobConf(HBaseConfiguration.create())
       jobConf.set("hbase.zookeeper.quorum", ZK_QUORUM)
       jobConf.set("hbase.zookeeper.property.clientPort", "2181")
       jobConf.set("zookeeper.znode.parent", "/hbase")
-      jobConf.setOutputFormat(classOf[TableOutputFormat])
+      jobConf.setOutputFormat(classOf[TableOutputFormat])//使用mr方式写写文件
       //写入表名
-      val table = new HTable(jobConf, TableName.valueOf("orders"))
+      //val table = new HTable(jobConf, TableName.valueOf("orders"))
+      val connection = ConnectionFactory.createConnection(jobConf)
+      val table = connection.getTable(TableName.valueOf("orders"))
       import scala.collection.JavaConversions._
       table.put(seqAsJavaList(partition.toSeq))
     }

@@ -1,5 +1,6 @@
 package com.badou.exercise
 
+import breeze.numerics.pow
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
@@ -34,5 +35,13 @@ object template {
     val conf = new SparkConf().setMaster("local[5]").setAppName("kafkainput")
     //11 rdd的排序中这是false即为倒叙
     udata.rdd.map(x => (x(0).toString, x(2).toString)).map(x => (x._1, x._2.toDouble)).sortBy(_._2,false)
+    //12 平方的操作
+    val num = 3;
+    //val d = pow(num.toDouble, 2)
+    //13 join不同字段时
+    val udata_v = udata.selectExpr("user_id as user_v")
+    udata.join(udata_v,udata("user_id")===udata_v("user_v"))
+    //14 多字段join
+    val trainData = udata_v.join(udata, Seq("user_id", "item_id"), "outer").na.fill(0)
   }
 }

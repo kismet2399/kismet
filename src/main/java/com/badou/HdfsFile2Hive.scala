@@ -68,6 +68,8 @@ object HdfsFile2Hive {
       .map(fieldName => StructField(fieldName, StringType, nullable = true))
     val schema = StructType(fields)
     import spark.implicits._
+    val frame = spark.read.text()
+    frame.rdd.map(x=>x(0).toString).map(x=>x.split(","))
     val input = sc.parallelize(listData)
     //要将rdd转换成RowRdd才能使用spark.createDataFrame(rowRdd,schema)多参数的方法
     val rowRdd = input.map(x => Row(x._1, x._2, x._3))
