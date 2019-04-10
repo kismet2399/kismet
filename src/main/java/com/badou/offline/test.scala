@@ -23,7 +23,7 @@ object test {
     val wordCounts = words.map((_,1L)).updateStateByKey[Long](addFunc)
 //      .reduceByKeyAndWindow((a:Int,b:Int)=>a+b,Seconds(20),Seconds(4))
     wordCounts.print()
-
+    def sum(L: List[Int]) = (0/:L){_ + _}
     ssc.start()
     ssc.awaitTermination()
   }

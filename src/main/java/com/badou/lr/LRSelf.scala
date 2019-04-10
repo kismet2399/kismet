@@ -51,7 +51,7 @@ object LRSelf {
     //  算法为收敛，迭代停止是因为达到了做大迭代次数
     // LogisticRegression training finished but the result is not converged because: max iterations reached
     // 创建LR模型
-    val lr = new LogisticRegression().setMaxIter(10).setRegParam(0).setElasticNetParam(0.7)
+    val lr = new LogisticRegression().setMaxIter(10).setRegParam(0).setElasticNetParam(0.7).setThreshold(0.5)//阈值设置
     // 模型训练
     val model = lr.fit(df)
     // 打印权重系数(w)和截距b

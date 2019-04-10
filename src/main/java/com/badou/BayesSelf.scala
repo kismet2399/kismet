@@ -89,7 +89,5 @@ object BayesSelf {
       //    `"weightedPrecision-->精确率"`,`"weightedRecall-->召回率"`, `"accuracy-->准确率"`)
       .setMetricName("weightedRecall")
     evaluator.evaluate(pred)
-
-
   }
 }

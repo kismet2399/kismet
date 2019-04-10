@@ -2,6 +2,7 @@ package com.badou
 
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
+import org.apache.spark.storage.StorageLevel
 
 object MySimpleFeature {
   def Feat(priors: DataFrame, orders: DataFrame): DataFrame = {
@@ -9,6 +10,8 @@ object MySimpleFeature {
     list.groupBy(_._1).mapValues(_.map(_._2).sum)
     (1->List((1->2),(1->3)))
     (2->List((2->2),(2->3)))
+    val list2 = List(1,2,3,4);
+    val r = list2.filter(2>_).partition(2>)
     /** product feature
       * 1.销售量 prod_cnt
       * 2.商品被再次购买（reordered）量prod_sum_rod
@@ -18,13 +21,10 @@ object MySimpleFeature {
     import priors.sparkSession.implicits._
     priors.select("product_id").groupBy("product_id").count()
     priors.groupBy("product_id")
-
-
-      
       .agg(sum("reordered").as("prod_sum_rod"),
         avg("reordered").as("prod_rod_rate"),
         count("product_id").as("prod_sum_rod"))
-
+    priors.cache().repartition(100)
     /**
       * user Features:
       * 1. 每个用户购买订单的平均间隔
@@ -89,7 +89,7 @@ object MySimpleFeature {
       //4.2计算总数
       x._2.foreach(x => (total += x._2));
       x._2.map(x => (user, x._1, x._2.asInstanceOf[Double] / total.asInstanceOf[Double], x._2, total))
-    }).toDF("user_id", "product_id", "u_p_rate", "num", "total");
+    }).toDF("user_id", "product_id", "u_p_rate", "num", "total").cache();
     u_p_rate
   }
 

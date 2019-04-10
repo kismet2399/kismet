@@ -1,18 +1,24 @@
+//{
+//  "type": "ALIYUN",
+//  "host": "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet",
+//  "port": "",
+//  "username": "LTAIaGdXj7DlAta1",
+//  "password": "KFCiwYPgASfVuTWZAeShb4Axbswx1g",
+//  "topicName": "JINGBO_TRANSACTION_TOPIC_QA",
+//  "producerId": "PID_JINGBO_TRANSACTION_QA",
+//  "virtualHost": "/",
+//  "consumeThreadNums": 5,
+//  "consumerId": "GID_JINGBO_TRANSACTION_QA",
+//  "baseConsumerId": "GID_JINGBO_TRANSACTION_QA_BASE",
+//  "promotionConsumerId": "GID_JINGBO_TRANSACTION_QA_PROMOTION",
+//  "memberConsumerId": "GID_JINGBO_TRANSACTION_QA_MEMBER",
+//  "itemConsumerId": "GID_JINGBO_TRANSACTION_QA_ITEM",
+//  "tradeConsumerId": "GID_JINGBO_TRANSACTION_QA_TRADE",
+//  "inventoryConsumerId": "GID_JINGBO_TRANSACTION_QA_INVENTORY"
+//}
+
 {
-  "type": "ALIYUN",
-  "host": "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet",
-  "port": "",
-  "username": "LTAIaGdXj7DlAta1",
-  "password": "KFCiwYPgASfVuTWZAeShb4Axbswx1g",
-  "topicName": "JINGBO_TRANSACTION_TOPIC_QA",
-  "producerId": "PID_JINGBO_TRANSACTION_QA",
-  "virtualHost": "/",
-  "consumeThreadNums":5,
-  "consumerId": "GID_JINGBO_TRANSACTION_QA",
-  "baseConsumerId": "GID_JINGBO_TRANSACTION_QA_BASE",
-  "promotionConsumerId": "GID_JINGBO_TRANSACTION_QA_PROMOTION",
-  "memberConsumerId": "GID_JINGBO_TRANSACTION_QA_MEMBER",
-  "itemConsumerId": "GID_JINGBO_TRANSACTION_QA_ITEM",
-  "tradeConsumerId": "GID_JINGBO_TRANSACTION_QA_TRADE",
-  "inventoryConsumerId": "GID_JINGBO_TRANSACTION_QA_INVENTORY"
+  "topicName":"JINGBO_AUDIT_TOPIC_STAGE",
+  "producerId": "PID_JINGBO_AUDIT_STAGE",
+  "consumerId": "CID_JINGBO_AUDIT_STAGE"
 }
