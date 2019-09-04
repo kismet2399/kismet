@@ -1,0 +1,14 @@
+create table udata(
+user_id string,
+item_id string,
+rating string,
+`timestamp` string
+)row format delimited fields terminated by '\t';
+
+load data local inpath '/mnt/hgfs/share/data/u.data'
+into table udata;
+
+
+        篮球,可乐,羽毛球,乒乓球,橙汁,足球,口红,绿豆沙
+振宇:[   5  ,1  ,3    ,0    ,   0,  0,  0,    0...]
+李凯:[   4  ,5  ,0    ,5    ,   0,  0,  0,    0...]

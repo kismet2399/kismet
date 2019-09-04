@@ -32,7 +32,7 @@ object UserBase {
     val df_sim_group = df_product.groupBy("user_id", "user_v")
       .agg(sum("rating_product").as("rating_sum_product"))
 
-    df_sim_group.where("user_id='198' and user_v='247'").show()
+    df_sim_group.where("user_id='198' and user_v='247'")
 
     // 计算最终结果 cos=a*b/(|a|*|b|)
     val userSoureSum_v = userSoureSum.selectExpr("user_id as user_v", "rating_sqrt_sum as rating_sqrt_sum_v")
